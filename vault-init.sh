@@ -353,4 +353,25 @@ else
     reconcile_secret_id "llm-orchestration-service"   /agent/credentials/llm_role_id  /agent/credentials/llm_secret_id
 fi
 
+# Store the Langfuse config where the LLM Orchestration Service reads it.
+# Outside both branches on purpose: the key must be written on every
+# deployment, not only the first. Langfuse creates the project and key from
+# its own LANGFUSE_INIT_* vars, so these values are declared, never generated.
+if [ -n "${LANGFUSE_INIT_PROJECT_PUBLIC_KEY}" ] && [ -n "${LANGFUSE_INIT_PROJECT_SECRET_KEY}" ]; then
+    echo "Storing Langfuse config in Vault..."
+    LANGFUSE_HOST="${LANGFUSE_HOST:-http://langfuse-web:3000}"
+    LANGFUSE_JSON='{"data":{"public_key":"'"${LANGFUSE_INIT_PROJECT_PUBLIC_KEY}"'","secret_key":"'"${LANGFUSE_INIT_PROJECT_SECRET_KEY}"'","host":"'"${LANGFUSE_HOST}"'"}}'
+
+    if wget -q -O- --post-data="${LANGFUSE_JSON}" \
+        --header="X-Vault-Token: ${ROOT_TOKEN}" \
+        --header='Content-Type: application/json' \
+        "$VAULT_ADDR/v1/secret/data/langfuse/config" >/dev/null; then
+        echo "Langfuse config stored at secret/data/langfuse/config"
+    else
+        echo "Warning: failed to store Langfuse config in Vault"
+    fi
+else
+    echo "Langfuse init variables not set, skipping Langfuse config"
+fi
+
 echo "=== Vault init complete ==="

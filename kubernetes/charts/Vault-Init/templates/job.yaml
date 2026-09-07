@@ -74,6 +74,14 @@ spec:
             value: {{ .Values.vault.addr | quote }}
           - name: VAULT_SKIP_VERIFY
             value: "true"
+          - name: LANGFUSE_HOST
+            value: {{ .Values.langfuse.host | quote }}
+        # The Langfuse public and secret keys both come from this Secret, which is
+        # created by the Langfuse-Web subchart. On a cold deploy this Job may sit
+        # in CreateContainerConfigError until that Secret exists; kubelet retries.
+        envFrom:
+          - secretRef:
+              name: {{ .Values.langfuse.secretName }}
         volumeMounts:
           {{- if .Values.volumes.vaultData.enabled }}
           - name: vault-data
