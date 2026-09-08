@@ -77,11 +77,12 @@ spec:
           - name: LANGFUSE_HOST
             value: {{ .Values.langfuse.host | quote }}
         # The Langfuse public and secret keys both come from this Secret, which is
-        # created by the Langfuse-Web subchart. On a cold deploy this Job may sit
-        # in CreateContainerConfigError until that Secret exists; kubelet retries.
+        # created by the Langfuse-Web subchart. Keep it optional so Vault init
+        # can run and skip Langfuse config when Langfuse is disabled.
         envFrom:
           - secretRef:
               name: {{ .Values.langfuse.secretName }}
+              optional: true
         volumeMounts:
           {{- if .Values.volumes.vaultData.enabled }}
           - name: vault-data
