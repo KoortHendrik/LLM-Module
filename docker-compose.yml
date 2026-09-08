@@ -478,6 +478,9 @@ services:
         condition: service_healthy
     environment:
       VAULT_ADDR: http://rag-vault:8200
+      LANGFUSE_HOST: ${LANGFUSE_HOST:-http://langfuse-web:3000}
+      LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ${LANGFUSE_INIT_PROJECT_PUBLIC_KEY:-}
+      LANGFUSE_INIT_PROJECT_SECRET_KEY: ${LANGFUSE_INIT_PROJECT_SECRET_KEY:-}
     volumes:
       - vault-data:/vault/data
       - vault-agent-creds:/agent/credentials

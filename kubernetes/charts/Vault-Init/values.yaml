@@ -37,6 +37,13 @@ volumes:
     accessMode: "ReadWriteOnce"
     storageClass: ""
 
+# Langfuse config written to Vault at secret/data/langfuse/config.
+# Both the public key and the secret key arrive from the referenced Secret, so
+# there is one source for them and no pair of values to keep in sync by hand.
+langfuse:
+  host: "http://langfuse-web:3005"
+  secretName: "langfuse-web-secrets"
+
 # Init script configuration
 initScript:
   enabled: true

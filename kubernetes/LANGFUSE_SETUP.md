@@ -1,6 +1,23 @@
 # Langfuse Setup
 
-**you can seed secrets in Langfuse-web , Langfuse-worker,clickhouse and database  with .env file values**
+Langfuse is initialized headlessly. The org, project, user and API key are
+declared up front through the `LANGFUSE_INIT_*` variables in
+`charts/Langfuse-Web/values.yaml` (non-sensitive fields) and the
+`langfuse-web-secrets` Secret (`LANGFUSE_INIT_PROJECT_SECRET_KEY`,
+`LANGFUSE_INIT_USER_PASSWORD`). Langfuse creates them on boot if they do not
+already exist.
+
+`vault-init` writes the same key to Vault at `secret/data/langfuse/config`
+(fields `public_key`, `secret_key`, `host`), where the LLM Orchestration Service
+reads it. This runs on every deployment, so there is no manual step.
+
+> The public key in `charts/Vault-Init/values.yaml` must match the one in
+> `charts/Langfuse-Web/values.yaml`, and the secret key is read from the
+> `langfuse-web-secrets` Secret by both charts.
+
+> **Note:** In Kubernetes the Langfuse-Web service port is `3005` (mapped to
+> container port 3000), so `LANGFUSE_HOST` is set explicitly to
+> `http://langfuse-web:3005`.
 
 ## 1. Verify Required Pods
 
@@ -19,44 +36,9 @@ All of the following must be `Running` or `Completed` — Langfuse will not star
 | `langfuse-worker-*` | Must be `Running` before web starts |
 | `langfuse-web-*` | UI + runs DB migrations on first boot |
 | `vault` | Secret storage |
-| `vault-Init`  | unseal vault | 
+| `vault-init` | Unseals Vault and writes the Langfuse config |
 
-## 2. Wait for DB Migrations
-
-On first startup, `langfuse-web` runs database migrations — this takes 1–2 minutes. Watch the logs:
-
-```bash
-kubectl logs -n your-namespace deployment/langfuse-web -f
-```
-
-Do **not** proceed until the pod is fully `Running`.
-
-## 3. Access the Dashboard
-
-```bash
-kubectl port-forward -n your-namespace svc/langfuse-web 3005:3005
-```
-
-Open **http://localhost:3005**, sign up / log in, then go to **Settings → API Keys → Create new key**.
-
-> Save both keys — the secret key is only shown once.
-> - `pk-lf-...` → Public Key  
-> - `sk-lf-...` → Secret Key
-
-## 4. Store Keys in Vault
-
-```bash
-kubectl cp store-langfuse-secrets.sh rag-module/vault-0:/tmp/store-langfuse-secrets.sh
-
-kubectl exec -n your-namespace vault-0 -- sh -c \
-  "LANGFUSE_INIT_PROJECT_PUBLIC_KEY=pk-lf-YOUR_KEY \
-   LANGFUSE_INIT_PROJECT_SECRET_KEY=sk-lf-YOUR_KEY \
-   LANGFUSE_HOST=http://langfuse-web:3005 \
-   sh /tmp/store-langfuse-secrets.sh"
-```
-
-Replace `pk-lf-YOUR_KEY` and `sk-lf-YOUR_KEY` with the actual keys from step 3.
-
-> **Note:** In Kubernetes, the Langfuse-Web service port is `3005` (mapped to container port 3000), so `LANGFUSE_HOST` must be set explicitly. In Docker Compose, the default (`http://langfuse-web:3000`) is used automatically.
-
-The script stores them at `secret/data/langfuse/config` in Vault, where the LLM Orchestration Service reads them.
+On first startup `langfuse-web` runs database migrations, which takes 1–2
+minutes. To confirm the key reached Vault, check the `vault-init` logs for
+`Langfuse config stored at secret/data/langfuse/config`, and the LLM
+Orchestration Service logs for `Langfuse client initialized successfully`.

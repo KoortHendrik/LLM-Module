@@ -174,20 +174,20 @@ HTTP endpoints for LLM connections, inference results, and chatbot inquiries are
 
 ### Storing Langfuse secrets
 
-Generate API keys in the Langfuse UI (**Settings → Project → API Keys**), then store them in Vault.
+Langfuse is initialized headlessly — do **not** generate API keys in the Langfuse
+UI. Declare the org, project, user and API key up front via the `LANGFUSE_INIT_*`
+variables and Langfuse creates them on boot if they do not already exist.
 
-For Docker Compose deployments, use the [`store-langfuse-secrets.sh`](./store-langfuse-secrets.sh)
-script:
+For Docker Compose deployments, set them in `.env` (see [env.example](./env.example)):
 
 ```bash
-# Copy the script into the vault container
-docker cp store-langfuse-secrets.sh vault:/tmp/store-langfuse-secrets.sh
-
-# Run it with your Langfuse keys
-docker exec -e LANGFUSE_INIT_PROJECT_PUBLIC_KEY=<your public key> \
-            -e LANGFUSE_INIT_PROJECT_SECRET_KEY=<your secret key> \
-            vault sh -c "chmod +x /tmp/store-langfuse-secrets.sh && /tmp/store-langfuse-secrets.sh"
+LANGFUSE_INIT_PROJECT_PUBLIC_KEY=<your public key>
+LANGFUSE_INIT_PROJECT_SECRET_KEY=<your secret key>
 ```
+
+`vault-init` then writes them to Vault at `secret/data/langfuse/config` (fields
+`public_key`, `secret_key`, `host`) on every deployment, where the LLM
+Orchestration Service reads them. There is no manual step.
 
 For Kubernetes, see [kubernetes/LANGFUSE_SETUP.md](./kubernetes/LANGFUSE_SETUP.md).
 

@@ -63,15 +63,19 @@ env:
   SMTP_CONNECTION_URL: ""
   
   # Langfuse initialization (Web-specific)
-  LANGFUSE_INIT_ORG_ID: ""
-  LANGFUSE_INIT_ORG_NAME: ""
-  LANGFUSE_INIT_PROJECT_ID: ""
-  LANGFUSE_INIT_PROJECT_NAME: ""
-  LANGFUSE_INIT_PROJECT_PUBLIC_KEY: ""
-  LANGFUSE_INIT_PROJECT_SECRET_KEY: ""
-  LANGFUSE_INIT_USER_EMAIL: ""
-  LANGFUSE_INIT_USER_NAME: ""
-  LANGFUSE_INIT_USER_PASSWORD: ""
+  # Headless init is OFF until the key values are supplied. The public key, the
+  # project secret key and the user password all live in the langfuse-web-secrets
+  # Secret (see templates/secret.yaml) and ship empty; while they are empty
+  # Langfuse skips headless init and vault-init skips writing to Vault.
+  # Do not set the public key here - env would override the Secret via envFrom.
+  # LANGFUSE_INIT_* only creates resources that do not already exist, so a
+  # placeholder that boots once binds the project to it permanently.
+  LANGFUSE_INIT_ORG_ID: "byk"
+  LANGFUSE_INIT_ORG_NAME: "Buerokratt"
+  LANGFUSE_INIT_PROJECT_ID: "llm-module"
+  LANGFUSE_INIT_PROJECT_NAME: "LLM Module"
+  LANGFUSE_INIT_USER_EMAIL: "admin@buerokratt.ee"
+  LANGFUSE_INIT_USER_NAME: "Admin"
 
 # Reference to Kubernetes Secret
 envFrom:
