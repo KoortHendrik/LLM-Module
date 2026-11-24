@@ -77,49 +77,12 @@
     "closeIcon": "Sulge menüü ikoon"
   },
   "menu": {
-    "userManagement": "Kasutajate haldus",
     "testLLM": "Testi mudelit",
     "testProductionLLM": "Testi toodangu mudelit",
     "llmConnections": {
       "_self": "Mudelite ühendused",
       "overview": "Ülevaade",
       "promptConfigurations": "Viiba Seaded"
-    }
-  },
-  "userManagement": {
-    "title": "Kasutajate haldus",
-    "addUserButton": " Lisa kasutaja",
-    "addUser": {
-      "addUserModalTitle": "Lisa uus kasutaja",
-      "editUserModalTitle": "Redigeeri kasutajat",
-      "deleteUserModalTitle": "Oled kindel?",
-      "deleteUserModalDesc": "Kinnita, et soovid kirje kustutada",
-      "name": "Ees- ja perekonnanimi",
-      "namePlaceholder": "Sisesta nimi",
-      "role": "Roll",
-      "rolePlaceholder": "-Vali-",
-      "personalId": "Isikukood",
-      "personalIdPlaceholder": "Sisesta isikukood",
-      "title": "Ametinimetus",
-      "titlePlaceholder": "Sisesta ametinimetus",
-      "email": "E-post",
-      "emailPlaceholder": "Sisesta e-post",
-      "nameRequired": "Nimi on kohustuslik",
-      "roleRequired": "Roll on kohustuslik",
-      "idCodeRequired": "Isikukood on kohustuslik",
-      "titleRequired": "Ametinimetus on kohustuslik",
-      "emailRequired": "E-posti aadress on kohustuslik",
-      "invalidIdCode": "Vigane isikukood",
-      "invalidEmail": "Vigane e-posti aadress",
-      "userExists": "Kasutaja on juba olemas"
-    },
-    "table": {
-      "fullName": "Täisnimi",
-      "personalId": "Isikukood",
-      "role": "Roll",
-      "email": "E-post",
-      "actions": "Tegevused",
-      "title": "Ametinimetus"
     }
   },
 
@@ -131,10 +94,7 @@
     "success": {
       "title": "Edu",
       "updateSuccess": "Uuendamine õnnestus",
-      "copied": "Kopeeritud",
-      "userDeleted": "Kasutaja kustutatud",
-      "newUserAdded": "Uus kasutaja lisatud",
-      "userUpdated": "Kasutaja uuendatud"
+      "copied": "Kopeeritud"
     },
     "error": {
       "title": "Viga"
@@ -377,7 +337,15 @@
       "replaceProductionDialogMessage": "Toodanguühendus \"{connectionName}\" on juba olemas.",
       "replaceProductionDialogWarning": "Uue toodanguühenduse loomine asendab praeguse. Kas oled kindel, et soovid jätkata?",
       "cancelButton": "Tühista",
-      "confirmReplaceButton": "Jah, asenda toodanguühendus"
+      "confirmReplaceButton": "Jah, asenda toodanguühendus",
+      "errors": {
+        "save": "Ühendust ei õnnestunud salvestada. Midagi ei loodud. Palun proovi uuesti.",
+        "vault": "Ühenduse autentimisandmeid ei õnnestunud turvaliselt salvestada, seega ühendust ei loodud. Palun proovi uuesti.",
+        "vaultRollbackFailed": "Ühenduse autentimisandmeid ei õnnestunud turvaliselt salvestada ning poolikut ühendust ei õnnestunud eemaldada. Palun kustuta see mudeli ühenduste nimekirjast.",
+        "promoteTitle": "Ühendus loodi testimiskeskkonda",
+        "promote": "Ühendus loodi testimisühendusena, kuid seda ei õnnestunud toodangusse viia. Ava ühendus ja määra selle keskkonnaks Toodang.",
+        "noProductionConnection": "Hetkel ei ole ükski toodanguühendus aktiivne. Määra mudeli ühenduste nimekirjas mõni ühendus toodangusse."
+      }
     },
     "viewConnection": {
       "updateSuccessTitle": "Ühenduse uuendamine õnnestus",

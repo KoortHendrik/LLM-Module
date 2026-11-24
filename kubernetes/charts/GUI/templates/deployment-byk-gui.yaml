@@ -83,14 +83,14 @@ spec:
           value: {{ .Values.gui.services.ruuterPrivate | quote }}
         - name: REACT_APP_EXTERNAL_API_URL
           value: {{ .Values.gui.services.datasetGenerator | quote }}
-        - name: REACT_APP_CUSTOMER_SERVICE_LOGIN
-          value: {{ printf "%s/et/dev-auth" .Values.gui.services.authenticationLayer | quote }}
         - name: REACT_APP_NOTIFICATION_NODE_URL
           value: {{ .Values.gui.services.notificationNode | quote }}
         - name: REACT_APP_CSP
           value: {{ .Values.gui.csp | quote }}
         - name: REACT_APP_SERVICE_ID
           value: {{ .Values.gui.serviceId | quote }}
+        - name: REACT_APP_MENU_JSON
+          value: {{ .Values.gui.menuJson | quote }}
         - name: REACT_APP_ENABLE_HIDDEN_FEATURES
           value: {{ .Values.gui.enableHiddenFeatures | quote | upper }}
         

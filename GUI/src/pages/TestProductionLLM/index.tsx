@@ -55,7 +55,7 @@ const TestProductionLLM: FC = () => {
   const connectionOptions = useMemo(
     () =>
       connections?.map((connection: any) => ({
-        label: `${connection.llmPlatform} - ${connection.llmModel} (${connection.environment})`,
+        label: `${connection.connectionName} (${connection.llmPlatform} - ${connection.llmModel}, ${connection.environment})`,
         value: String(connection.id),
       })) || [],
     [connections]
@@ -71,11 +71,6 @@ const TestProductionLLM: FC = () => {
     setSelectedConnectionId(value ? String(value) : null);
   };
   
-  // Auto-scroll to bottom
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
   // Cleanup incomplete messages on unmount if streaming is active
   useEffect(() => {
     return () => {
@@ -108,6 +103,7 @@ const TestProductionLLM: FC = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 0);
     setInputMessage('');
     setIsLoading(true);
 
@@ -242,6 +238,7 @@ const TestProductionLLM: FC = () => {
       timestamp: new Date().toISOString(),
     };
     setMessages(prev => [...prev, userMessage]);
+    setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 0);
     setIsLoading(true);
 
     const botMessageId = `bot-${Date.now()}`;
